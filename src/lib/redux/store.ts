@@ -9,6 +9,7 @@ import {
   persistStore,
 } from "redux-persist";
 import { authReducer } from "./auth/authSlice";
+import { furnitureReducer } from "./furniture/furnitureSlice";
 // import storage from "redux-persist/lib/storage";
 
 // const persistConfig = {
@@ -19,6 +20,7 @@ import { authReducer } from "./auth/authSlice";
 export const store = configureStore({
   reducer: {
     auth: authReducer,
+    furniture: furnitureReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
