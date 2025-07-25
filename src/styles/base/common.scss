@@ -1,0 +1,15 @@
+html {
+  scroll-behavior: smooth;
+}
+body {
+  //? also bg color
+  //? also font family
+  background-color: rgb(25, 25, 25);
+  color: #d3d3d3;
+  font-family: var(--font-geist-sans);
+  line-height: normal;
+  font-style: normal;
+}
+button:hover {
+  cursor: pointer;
+}
