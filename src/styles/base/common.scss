@@ -4,11 +4,15 @@ html {
 body {
   //? also bg color
   //? also font family
-  background-color: rgb(25, 25, 25);
-  color: #d3d3d3;
-  font-family: var(--font-geist-sans);
+  background-color: var(--bg-color);
+  font-family: var(--font-roboto-mono);
   line-height: normal;
   font-style: normal;
+}
+:root{
+  --primary-color: #fafbfe;
+  --secondary-color: #12a4d5;
+  --bg-color: #172430;
 }
 button:hover {
   cursor: pointer;
