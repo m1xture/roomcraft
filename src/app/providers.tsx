@@ -38,9 +38,9 @@ const Providers = ({
   return (
     <ThemeProvider theme={theme}>
       <Provider store={store}>
-        {/* <PersistGate persistor={persistor} loading={null}> */}
+        <PersistGate persistor={persistor} loading={null}>
           {children}
-        {/* </PersistGate> */}
+        </PersistGate>
       </Provider>
     </ThemeProvider>
   );

@@ -1,5 +1,11 @@
+import Header from "@/components/shared/layout/Header/Header";
+import Rooms from "@/components/widgets/Rooms/Rooms";
+
 export default () => {
-    return (<>
-        T2
-    </>);
-}
+  return (
+    <>
+      <Header />
+      <Rooms />
+    </>
+  );
+};
