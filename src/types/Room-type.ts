@@ -6,5 +6,14 @@ export interface Room {
   isPublic: boolean;
   isLocked: boolean;
   furniture: ActiveFurniture[];
-  createdAt: Date;
+  createdAt: number;
+}
+
+export interface ReducedRoom {
+  id: string;
+  name: string;
+  isPublic: boolean;
+  isLocked: boolean;
+  furniture: string[] | "No furniture added yet";
+  createdAt: number;
 }

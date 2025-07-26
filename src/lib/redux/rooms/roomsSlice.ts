@@ -1,7 +1,8 @@
 import { ActiveFurniture } from "@/types/Furniture-type";
-import { Room } from "@/types/Room-type";
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { ReducedRoom, Room } from "@/types/Room-type";
+import { createSelector, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { customAlphabet } from "nanoid";
+import { RootState } from "../store";
 
 const alphabet =
   "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
@@ -27,7 +28,7 @@ const roomsSlice = createSlice({
             isPublic: false,
             isLocked: false,
             furniture: [],
-            createdAt: new Date(),
+            createdAt: Date.now(),
           },
         };
       },
@@ -70,3 +71,28 @@ export const {
   editFurniture,
   deleteRoom,
 } = roomsSlice.actions;
+
+export const selectAllRooms = createSelector(
+  (state: RootState) => state.rooms.rooms,
+  (rooms: Room[]): ReducedRoom[] => {
+    return rooms.map((r) => {
+      const copyRoom: ReducedRoom = {
+        ...r,
+        furniture:
+          r.furniture.length === 0
+            ? "No furniture added yet"
+            : r.furniture.map((f) => f.title),
+      };
+      return copyRoom;
+    });
+  }
+);
+
+export const selectRoomById = (roomId: string) => {
+  return createSelector(
+    (state: RootState) => state.rooms.rooms,
+    (rooms) => {
+      return rooms.find((r) => r.id === roomId);
+    }
+  );
+};
