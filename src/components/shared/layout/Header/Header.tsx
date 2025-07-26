@@ -32,7 +32,7 @@ const Header = () => {
             className={css.headerLink}
             marginRight={"3em"}
           >
-            Home
+            На головну
           </Typography>
           <Typography
             component={Link}
@@ -40,7 +40,7 @@ const Header = () => {
             color="primary"
             className={css.headerLink}
           >
-            Rooms
+            Кімнати
           </Typography>
         </nav>
       </Container>
