@@ -1,0 +1,21 @@
+.header {
+  padding-top: 1.5vh;
+  & > div {
+    display: flex;
+    align-items: center;
+  }
+}
+
+.headerBlock {
+  display: flex;
+  align-items: center;
+}
+
+.headerLogo {
+  width: 5%;
+  height: auto;
+}
+
+.headerNav {
+  margin-left: auto;
+}
