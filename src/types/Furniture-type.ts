@@ -3,7 +3,7 @@ export interface ActiveFurniture {
   title: string;
   description: string;
   isLocked: boolean;
-  angle: number;
+  angle: 0 | 90 | 180 | 270;
   size: {
     width: number;
     height: number;

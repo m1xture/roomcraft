@@ -7,9 +7,15 @@ import {
   PURGE,
   REGISTER,
   persistStore,
+  createTransform,
+  persistReducer,
 } from "redux-persist";
 import { authReducer } from "./auth/authSlice";
 import { furnitureReducer } from "./furniture/furnitureSlice";
+import storage from "redux-persist-indexeddb-storage";
+import { compressSync, decompressSync, strToU8, strFromU8 } from "fflate";
+import { roomsReducer } from "./rooms/roomsSlice";
+
 // import storage from "redux-persist/lib/storage";
 
 // const persistConfig = {
@@ -17,9 +23,25 @@ import { furnitureReducer } from "./furniture/furnitureSlice";
 //   storage,
 // };
 
+const compressionTransform = createTransform(
+  (inboundState) =>
+    Array.from(compressSync(strToU8(JSON.stringify(inboundState)))),
+  (outboundState) =>
+    JSON.parse(strFromU8(decompressSync(new Uint8Array(outboundState))))
+);
+
+const roomsPersistConfig = {
+  key: "root",
+  storage: storage("rooms"),
+  transforms: [compressionTransform],
+};
+
+const persistedRoomsReducer = persistReducer(roomsPersistConfig, roomsReducer);
+
 export const store = configureStore({
   reducer: {
     auth: authReducer,
+    rooms: persistedRoomsReducer,
     furniture: furnitureReducer,
   },
   middleware: (getDefaultMiddleware) =>
