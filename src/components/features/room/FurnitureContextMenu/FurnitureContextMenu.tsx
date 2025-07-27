@@ -147,7 +147,7 @@ const FurnitureContextMenu = ({ id }: { id: string }) => {
       <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
         <Tabs
           value={value}
-          onChange={(event: React.SyntheticEvent, newValue: number) =>
+          onChange={(evt: React.SyntheticEvent, newValue: number) =>
             setValue(newValue)
           }
           aria-label="furniture context tabs"
