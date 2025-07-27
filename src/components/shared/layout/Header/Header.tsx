@@ -2,7 +2,7 @@ import css from "./Header.module.scss";
 import Container from "../Container/Container";
 import Image from "next/image";
 import Logo from "@/media/imgs/logo.png";
-import { Typography } from "@mui/material";
+import { Button, Typography } from "@mui/material";
 import Link from "next/link";
 
 const Header = () => {
@@ -17,11 +17,12 @@ const Header = () => {
           />
           <Typography
             variant="h2"
-            component="h2"
+            component="a"
             color="primary"
             fontSize={"1em"}
+            href="/"
           >
-            Room <br /> craft
+            Room craft
           </Typography>
         </div>
         <nav className={css.headerNav}>
