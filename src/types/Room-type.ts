@@ -7,6 +7,8 @@ export interface Room {
   isLocked: boolean;
   furniture: ActiveFurniture[];
   createdAt: number;
+  width: number;
+  height: number;
 }
 
 export interface ReducedRoom {
