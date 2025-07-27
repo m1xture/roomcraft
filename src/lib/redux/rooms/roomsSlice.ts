@@ -29,8 +29,6 @@ const roomsSlice = createSlice({
             isLocked: false,
             furniture: [],
             createdAt: Date.now(),
-            width: 6,
-            height: 6,
           },
         };
       },
@@ -53,11 +51,6 @@ const roomsSlice = createSlice({
       if (idx === -1) return;
       state.rooms[idx].isLocked = !state.rooms[idx].isLocked;
     },
-    editRSZ(state, action: PayloadAction<{id: string, w: number, h: number}>) {
-      const idx = state.rooms.findIndex((r) => r.id === action.payload.id);
-      state.rooms[idx].width = action.payload.w;
-      state.rooms[idx].height = action.payload.h;
-    },
     toggleRoomPublic(state, action: PayloadAction<string>) {
       const idx = state.rooms.findIndex((r) => r.id === action.payload);
       if (idx === -1) return;
@@ -77,7 +70,6 @@ export const {
   editRoomName,
   editFurniture,
   deleteRoom,
-  editRSZ,
 } = roomsSlice.actions;
 
 export const selectAllRooms = createSelector(
