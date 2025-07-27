@@ -1,18 +1,14 @@
 export interface ActiveFurniture {
   id: string;
   title: string;
-  description: string;
+  tag: string;
   isLocked: boolean;
   angle: 0 | 90 | 180 | 270;
-  size: {
-    width: number;
-    height: number;
-  };
-  images: {
-    "0": string;
-    "90": string;
-    "180": string;
-    "270": string;
+  angles: {
+    "0": [string, [number, number]];
+    "90": [string, [number, number]];
+    "180": [string, [number, number]];
+    "270": [string, [number, number]];
   };
   position: {
     x: number;
