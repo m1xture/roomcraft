@@ -5,7 +5,7 @@ import styled from "styled-components";
 
 const StyledBox = styled.div`
   display: flex;
-  justify-content: center;
+justify-content: center;
 `;
 
 const CreateRoomBtn = ({ openCb }: { openCb: () => void }) => {
