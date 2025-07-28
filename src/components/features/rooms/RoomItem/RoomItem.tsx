@@ -9,13 +9,27 @@ import { useDispatch } from "react-redux";
 import styled from "styled-components";
 
 const StyledListItemText = styled(ListItemText)`
+  max-width: 90%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+
   && {
     color: var(--secondary-color);
   }
+
+  .MuiListItemText-primary,
+  .MuiListItemText-secondary {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
   .MuiListItemText-primary {
     margin-bottom: 1em;
     font-size: large;
   }
+
   .MuiListItemText-secondary {
     color: var(--primary-color);
     opacity: 0.7;
