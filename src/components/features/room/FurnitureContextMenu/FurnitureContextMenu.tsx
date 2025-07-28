@@ -23,6 +23,7 @@ import {
 } from "@mui/material";
 import { RefObject, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import furnituresData from '../../../../lib/constants/furniture.json';
 import {
   addNewFurniture,
   delFurniture,
@@ -87,32 +88,7 @@ const a11yProps = (index: number) => ({
   },
 });
 
-const Furnitures: FurnitureInfo[] = [
-  {
-    id: "68838aaea4b26f770c036b01",
-    tag: "office-chair",
-    title: "Жовтий, як сонце, офісний стул",
-    description:
-      "Обіцяє вам прослужити ще декілька світових років (напевно бреше)",
-    category: "Стільці",
-    sizes: [
-      [50, 100],
-      [50, 100],
-    ],
-  },
-  {
-    id: "ZTWQTqxCXQu1FsrONUee0",
-    tag: "sofa",
-    title: "Затишний синій диван",
-    description:
-      "Обіцяє вам прослужити ще декілька світових років (напевно бреше)",
-    category: "Дивани",
-    sizes: [
-      [100, 50],
-      [50, 100],
-    ],
-  },
-];
+const Furnitures: FurnitureInfo[] = furnituresData as FurnitureInfo[];
 
 const FurnitureContextMenu = ({ id, stageRef }: { id: string, stageRef: RefObject<Konva.Stage | null> }) => {
   const [value, setValue] = useState(0);

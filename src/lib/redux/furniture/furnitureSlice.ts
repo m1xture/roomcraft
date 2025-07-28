@@ -4,6 +4,7 @@ import { act } from "react";
 import { Root } from "react-dom/client";
 import { stat } from "fs";
 import { ActiveFurniture } from "@/types/Furniture-type";
+import { toast } from "react-toastify";
 
 const initialStateFurnitures: {
   selectId: string;
@@ -39,7 +40,8 @@ const generateRandomPosition = (
     });
     if (!isOverlapping) return { x, y };
   }
-  return { x: 0, y: 0 };
+  toast.error('Не достатьно місця для меблі!')
+  return "Err";
 };
 
 const furnitureSlice = createSlice({
@@ -98,36 +100,39 @@ const furnitureSlice = createSlice({
       });
     },
     addNewFurniture(state, action) {
-      state.furs.push({
-        id: nanoid(),
-        title: action.payload.title,
-        isLocked: false,
-        tag: action.payload.tag,
-        angle: 0,
-        angles: {
-          "0": [
-            `/${action.payload.tag}/${action.payload.tag}0.png`,
-            action.payload.sizes[0],
-          ],
-          "90": [
-            `/${action.payload.tag}/${action.payload.tag}90.png`,
-            action.payload.sizes[1],
-          ],
-          "180": [
-            `/${action.payload.tag}/${action.payload.tag}180.png`,
-            action.payload.sizes[0],
-          ],
-          "270": [
-            `/${action.payload.tag}/${action.payload.tag}270.png`,
-            action.payload.sizes[1],
-          ],
-        },
-        position: generateRandomPosition(
-          state,
-          action.payload.sizes[0][0],
-          action.payload.sizes[0][1]
-        ),
-      });
+      const pos = generateRandomPosition(
+        state,
+        action.payload.sizes[0][0],
+        action.payload.sizes[0][1]
+      );
+      if (pos !== "Err") {
+        state.furs.push({
+          id: nanoid(),
+          title: action.payload.title,
+          isLocked: false,
+          tag: action.payload.tag,
+          angle: 0,
+          angles: {
+            "0": [
+              `/${action.payload.tag}/${action.payload.tag}0.png`,
+              action.payload.sizes[0],
+            ],
+            "90": [
+              `/${action.payload.tag}/${action.payload.tag}90.png`,
+              action.payload.sizes[1],
+            ],
+            "180": [
+              `/${action.payload.tag}/${action.payload.tag}180.png`,
+              action.payload.sizes[0],
+            ],
+            "270": [
+              `/${action.payload.tag}/${action.payload.tag}270.png`,
+              action.payload.sizes[1],
+            ],
+          },
+          position: pos,
+        });
+      }
     },
   },
 });
