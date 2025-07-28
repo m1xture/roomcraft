@@ -36,15 +36,19 @@ import {
   editH,
   selectW,
   selectH,
+  setInitialFurnitures,
 } from "@/lib/redux/furniture/furnitureSlice";
 import {
   selectRoomById,
   editFurniture,
   editRSZ,
 } from "@/lib/redux/rooms/roomsSlice";
+import { ActiveFurniture, FurnitureInfo } from "@/types/Furniture-type";
+import UnsavedChangesDialog from "@/components/features/room/UnsavedChangesDialog/UnsavedChangesDialog";
+import FurnitureCard from "../FurnitureCard/FurnitureCard";
 
 const StyledMenu = styled(MenuList)`
-  width: 206px;
+  width: 16vw;
   background-color: #1e2f3e;
   border-radius: 8px;
   padding: 1vw;
@@ -82,23 +86,47 @@ const a11yProps = (index: number) => ({
   },
 });
 
+const Furnitures: FurnitureInfo[] = [
+  {
+    id: "68838aaea4b26f770c036b01",
+    tag: "office-chair",
+    title: "Жовтий, як сонце, офісний стул",
+    description:
+      "Обіцяє вам прослужити ще декілька світових років (напевно бреше)",
+    category: "Стільці",
+    sizes: [
+      [50, 100],
+      [50, 100],
+    ],
+  },
+  {
+    id: "ZTWQTqxCXQu1FsrONUee0",
+    tag: "sofa",
+    title: "Затишний синій диван",
+    description:
+      "Обіцяє вам прослужити ще декілька світових років (напевно бреше)",
+    category: "Дивани",
+    sizes: [
+      [100, 50],
+      [50, 100],
+    ],
+  },
+];
+
 const FurnitureContextMenu = ({ id }: { id: string }) => {
   const [value, setValue] = useState(0);
   const dispatch = useDispatch();
   const selectedId = useSelector(selectSelectedId);
-  const furniture = useSelector(selectSelectedFurniture);
+  const furniture = useSelector(selectSelectedFurniture) as ActiveFurniture;
   const furnitures = useSelector(selectAllFurniture);
   const room = useSelector(selectRoomById(id));
   const gridWidth = useSelector(selectW);
   const gridHeight = useSelector(selectH);
   return (
-    <StyledMenu style={{ height: "min-content" }}>
-      <Button
-        fullWidth
-        variant="contained"
-        color="primary"
-        sx={{ mb: 2 }}
-        onClick={() => {
+    <>
+      <UnsavedChangesDialog
+        handleReset={() => dispatch(setInitialFurnitures(room?.furniture))}
+        handleSave={() => {
           dispatch(
             editFurniture({
               id: room?.id || "",
@@ -113,142 +141,164 @@ const FurnitureContextMenu = ({ id }: { id: string }) => {
             })
           );
         }}
-      >
-        Зберегти кімнату
-      </Button>
-
-      <Box sx={{ mb: 2 }}>
-        <Typography color="white" variant="body2">
-          Ширина сітки: {gridWidth}
-        </Typography>
-        <Box sx={{ width: "90%", mx: "auto" }}>
-          <Slider
-            value={gridWidth}
-            onChange={(_, newVal) => dispatch(editW(newVal as number))}
-            min={6}
-            max={30}
-            step={1}
-          />
+        isOpen={JSON.stringify(room?.furniture) !== JSON.stringify(furnitures)}
+      />
+      <StyledMenu style={{ height: "min-content" }}>
+        <Box sx={{ mb: 2 }}>
+          <Typography
+            color="white"
+            variant="body2"
+            sx={{ width: "90%", mx: "auto" }}
+          >
+            Ширина сітки: {gridWidth}
+          </Typography>
+          <Box sx={{ width: "90%", mx: "auto" }}>
+            <Slider
+              value={gridWidth}
+              onChange={(_, newVal) => dispatch(editW(newVal as number))}
+              min={6}
+              max={30}
+              step={1}
+            />
+          </Box>
+          <Typography
+            color="white"
+            variant="body2"
+            sx={{ width: "90%", mx: "auto" }}
+          >
+            Висота сітки: {gridHeight}
+          </Typography>
+          <Box sx={{ width: "90%", mx: "auto" }}>
+            <Slider
+              value={gridHeight}
+              onChange={(_, newVal) => dispatch(editH(newVal as number))}
+              min={6}
+              max={30}
+              step={1}
+            />
+          </Box>
         </Box>
-        <Typography color="white" variant="body2">
-          Висота сітки: {gridHeight}
-        </Typography>
-        <Box sx={{ width: "90%", mx: "auto" }}>
-          <Slider
-            value={gridHeight}
-            onChange={(_, newVal) => dispatch(editH(newVal as number))}
-            min={6}
-            max={30}
-            step={1}
-          />
+
+        <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+          <Tabs
+            value={value}
+            onChange={(evt: React.SyntheticEvent, newValue: number) =>
+              setValue(newValue)
+            }
+            aria-label="furniture context tabs"
+          >
+            <Tab style={{ width: "50%" }} label="Додати" {...a11yProps(0)} />
+            <Tab
+              style={{ width: "50%" }}
+              label="Редагувати"
+              {...a11yProps(1)}
+            />
+          </Tabs>
         </Box>
-      </Box>
 
-      <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-        <Tabs
-          value={value}
-          onChange={(evt: React.SyntheticEvent, newValue: number) =>
-            setValue(newValue)
-          }
-          aria-label="furniture context tabs"
-        >
-          <Tab label="Додати" {...a11yProps(0)} />
-          <Tab label="Редагувати" {...a11yProps(1)} />
-        </Tabs>
-      </Box>
+        <CustomTabPanel value={value} index={0}>
+          <Stack spacing={1}>
+            {Furnitures.map((f: FurnitureInfo) => (
+              <FurnitureCard
+                key={f.id}
+                data={f}
+                handleSelect={() => dispatch(addNewFurniture(f))}
+              />
+            ))}
+            {/* <FurnitureCard data={} /> */}
+            {/* <Button
+              variant="outlined"
+              startIcon={<FaChair />}
+              onClick={() =>
+                dispatch(
+                  addNewFurniture({
+                    id: "68838aaea4b26f770c036b01",
+                    tag: "office-chair",
+                    title: "Жовтий, як сонце, офісний стул",
+                    description:
+                      "Обіцяє вам прослужити ще декілька світових років (напевно бреше)",
+                    category: "Стільці",
+                    sizes: [
+                      [50, 100],
+                      [50, 100],
+                    ],
+                  })
+                )
+              }
+            >
+              Додати стілець
+            </Button>
+            <Button
+              variant="outlined"
+              startIcon={<FaCouch />}
+              onClick={() =>
+                dispatch(
+                  addNewFurniture({
+                    id: "ZTWQTqxCXQu1FsrONUee0",
+                    tag: "sofa",
+                    title: "Затишний синій диван",
+                    description:
+                      "Обіцяє вам прослужити ще декілька світових років (напевно бреше)",
+                    category: "Дивани",
+                    sizes: [
+                      [100, 50],
+                      [50, 100],
+                    ],
+                  })
+                )
+              }
+            >
+              Додати диван
+            </Button> */}
+          </Stack>
+        </CustomTabPanel>
 
-      <CustomTabPanel value={value} index={0}>
-        <Stack spacing={1}>
-          <Button
-            variant="outlined"
-            startIcon={<FaChair />}
-            onClick={() =>
-              dispatch(
-                addNewFurniture({
-                  id: "68838aaea4b26f770c036b01",
-                  tag: "office-chair",
-                  title: "Жовтий, як сонце, офісний стул",
-                  description:
-                    "Обіцяє вам прослужити ще декілька світових років (напевно бреше)",
-                  category: "Стільці",
-                  sizes: [
-                    [50, 100],
-                    [50, 100],
-                  ],
-                })
-              )
-            }
-          >
-            Додати стілець
-          </Button>
-          <Button
-            variant="outlined"
-            startIcon={<FaCouch />}
-            onClick={() =>
-              dispatch(
-                addNewFurniture({
-                  id: "ZTWQTqxCXQu1FsrONUee0",
-                  tag: "sofa",
-                  title: "Затишний синій диван",
-                  description:
-                    "Обіцяє вам прослужити ще декілька світових років (напевно бреше)",
-                  category: "Дивани",
-                  sizes: [
-                    [100, 50],
-                    [50, 100],
-                  ],
-                })
-              )
-            }
-          >
-            Додати диван
-          </Button>
-          {/* <Button variant="outlined" startIcon={<FaBed />}>
-            Додати кровать
-          </Button> */}
-        </Stack>
-      </CustomTabPanel>
-
-      <CustomTabPanel value={value} index={1}>
-        <Typography color="primary" variant="subtitle1" sx={{ mb: 1 }}>
-          {selectedId ? `Вибрано: ${furniture?.title}` : "Нічого не вибрано"}
-        </Typography>
-        <Stack spacing={1}>
-          <Button
-            variant="outlined"
-            startIcon={<FaArrowRotateRight />}
-            onClick={() =>
-              dispatch(setAngle({ id: selectedId, side: "right" }))
-            }
-          >
-            Повернути на 90° вправо
-          </Button>
-          <Button
-            variant="outlined"
-            startIcon={<FaArrowRotateLeft />}
-            onClick={() => dispatch(setAngle({ id: selectedId, side: "left" }))}
-          >
-            Повернути на 90° вліво
-          </Button>
-          <Button
-            variant="outlined"
-            startIcon={<FaLock />}
-            onClick={() => dispatch(toggleBanFur(selectedId))}
-          >
-            {furniture?.isLocked ? "Розблокувати" : "Заблокувати"}
-          </Button>
-          <Button
-            variant="outlined"
-            startIcon={<FaTrash />}
-            onClick={() => (
-              dispatch(delFurniture(selectedId)), dispatch(setSelectedID(0))
-            )}
-          >
-            Видалити
-          </Button>
-        </Stack>
-      </CustomTabPanel>
-    </StyledMenu>
+        <CustomTabPanel value={value} index={1}>
+          <Typography color="primary" variant="subtitle1" sx={{ mb: 1 }}>
+            {selectedId ? `Вибрано: ${furniture?.title}` : "Нічого не вибрано"}
+          </Typography>
+          {selectedId && (
+            <Stack spacing={1}>
+              <Button
+                variant="outlined"
+                startIcon={<FaArrowRotateRight />}
+                onClick={() =>
+                  dispatch(setAngle({ id: selectedId, side: "right" }))
+                }
+              >
+                Повернути на 90° вправо
+              </Button>
+              <Button
+                variant="outlined"
+                startIcon={<FaArrowRotateLeft />}
+                onClick={() =>
+                  dispatch(setAngle({ id: selectedId, side: "left" }))
+                }
+              >
+                Повернути на 90° вліво
+              </Button>
+              <Button
+                variant="outlined"
+                startIcon={<FaLock />}
+                onClick={() => dispatch(toggleBanFur(selectedId))}
+              >
+                {furniture?.isLocked ? "Розблокувати" : "Заблокувати"}
+              </Button>
+              <Button
+                variant="outlined"
+                startIcon={<FaTrash />}
+                onClick={() => (
+                  dispatch(delFurniture(selectedId)),
+                  dispatch(setSelectedID(""))
+                )}
+              >
+                Видалити
+              </Button>
+            </Stack>
+          )}
+        </CustomTabPanel>
+      </StyledMenu>
+    </>
   );
 };
 export default FurnitureContextMenu;

@@ -6,6 +6,7 @@ import Header from "@/components/shared/layout/Header/Header";
 import { editH, editW, setInitialFurnitures } from "@/lib/redux/furniture/furnitureSlice";
 import { selectRoomById } from "@/lib/redux/rooms/roomsSlice";
 import { useParams, useRouter } from "next/navigation";
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 
@@ -25,16 +26,23 @@ export default () => {
   const router = useRouter();
   const dispatch = useDispatch();
   const id: string = String(useParams()?.id) || "";
-  if (!id) {
-    router.replace("/rooms");
-  }
   const room = useSelector(selectRoomById(id));
-  const furniture = room?.furniture;
-  const w = room?.width;
-  const h = room?.height;
-  dispatch(setInitialFurnitures(furniture));
-  dispatch(editW(w));
-  dispatch(editH(h));
+  useEffect(() => {
+    if (!room) {
+      router.replace("/rooms");
+      return;
+    }
+    const furniture = room.furniture || [];
+    const w = room.width || 6;
+    const h = room.height || 6;
+    dispatch(setInitialFurnitures(furniture));
+    dispatch(editW(w));
+    dispatch(editH(h));
+  }, [dispatch, room, router]);
+
+  if (!room) {
+    return null;
+  }
   return (
     <RoomSection>
       <Header />

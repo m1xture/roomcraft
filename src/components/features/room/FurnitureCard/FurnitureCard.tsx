@@ -16,12 +16,14 @@ const FurnitureCard = ({
         <div>
           <Image
             className={css.cardThumb}
-            src={data.image}
+            src={`/${data.tag}/${data.tag}0.png`}
             alt={`Іконка ${data.title}`}
+            width={100}
+            height={100}
           />
         </div>
         <figcaption className={css.cardSubtext}>
-          {data.size.width}⨯{data.size.height}
+          {data.sizes[0][0]}⨯{data.sizes[0][1]}
         </figcaption>
       </figure>
       <div className={css.cardTextWrapper}>

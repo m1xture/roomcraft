@@ -1,4 +1,4 @@
-import { createSlice, nanoid } from "@reduxjs/toolkit";
+import { createSlice, nanoid, PayloadAction } from "@reduxjs/toolkit";
 import { RootState } from "../store";
 import { act } from "react";
 import { Root } from "react-dom/client";
@@ -15,6 +15,31 @@ const initialStateFurnitures: {
   furs: [],
   w: 6,
   h: 6,
+};
+
+const generateRandomPosition = (
+  state: typeof initialStateFurnitures,
+  width: number,
+  height: number
+) => {
+  const maxAttempts = 100;
+  for (let i = 0; i < maxAttempts; i++) {
+    const x = Math.floor(Math.random() * (state.w - width / 50)) * 50;
+    const y = Math.floor(Math.random() * (state.h - height / 50)) * 50;
+
+    const isOverlapping = state.furs.some((other) => {
+      const otherW = other.angles[other.angle][1][0];
+      const otherH = other.angles[other.angle][1][1];
+      return !(
+        x + width <= other.position.x ||
+        x >= other.position.x + otherW ||
+        y + height <= other.position.y ||
+        y >= other.position.y + otherH
+      );
+    });
+    if (!isOverlapping) return { x, y };
+  }
+  return { x: 0, y: 0 };
 };
 
 const furnitureSlice = createSlice({
@@ -44,19 +69,33 @@ const furnitureSlice = createSlice({
       state.selectId = action.payload;
     },
     setAngle(state, action) {
-      const furnitureIndex = state.furs.findIndex(
-        (f) => f.id === action.payload.id
-      );
-      const ang = state.furs[furnitureIndex].angle;
-      let newAngle = action.payload.side === "right" ? ang + 90 : ang - 90;
-      newAngle = ((newAngle % 360) + 360) % 360;
-      state.furs[furnitureIndex].angle = newAngle;
+      const fur =
+        state.furs[state.furs.findIndex((f) => f.id === action.payload.id)];
+      const rotatedAngle = ((((fur?.angle +
+        (action.payload.side === "right" ? 90 : -90)) %
+        360) +
+        360) %
+        360) as 0 | 90 | 180 | 270;
+      const fitsInBounds =
+        fur.position.x + fur.angles[rotatedAngle][1][0] <= state.w * 50 &&
+        fur.position.y + fur.angles[rotatedAngle][1][1] <= state.h * 50;
+      if (fitsInBounds) {
+        fur.angle = rotatedAngle;
+      }
     },
     editW(state, action) {
       state.w = action.payload;
+      state.furs = state.furs.filter((fur) => {
+        const width = fur.angles[fur.angle][1][0];
+        return fur.position.x + width <= state.w * 50;
+      });
     },
     editH(state, action) {
       state.h = action.payload;
+      state.furs = state.furs.filter((fur) => {
+        const height = fur.angles[fur.angle][1][1];
+        return fur.position.y + height <= state.h * 50;
+      });
     },
     addNewFurniture(state, action) {
       state.furs.push({
@@ -83,10 +122,11 @@ const furnitureSlice = createSlice({
             action.payload.sizes[1],
           ],
         },
-        position: {
-          x: 0,
-          y: 0,
-        },
+        position: generateRandomPosition(
+          state,
+          action.payload.sizes[0][0],
+          action.payload.sizes[0][1]
+        ),
       });
     },
   },
