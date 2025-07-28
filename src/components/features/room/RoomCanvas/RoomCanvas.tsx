@@ -106,7 +106,7 @@ const RoomCanvas = ({
     Math.round(value / GRID_SIZE) * GRID_SIZE;
 
   return (
-    <div style={{ margin: "auto" }}>
+    <div style={{ margin: "0 auto" }}>
       <Stage ref={stageRef} width={stageWidth + 2} height={stageHeight + 2}>
         <Layer>
           <Rect
