@@ -21,7 +21,7 @@ import {
   Typography,
   Slider,
 } from "@mui/material";
-import { useState } from "react";
+import { RefObject, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   addNewFurniture,
@@ -46,12 +46,13 @@ import {
 import { ActiveFurniture, FurnitureInfo } from "@/types/Furniture-type";
 import UnsavedChangesDialog from "@/components/features/room/UnsavedChangesDialog/UnsavedChangesDialog";
 import FurnitureCard from "../FurnitureCard/FurnitureCard";
+import Konva from "konva";
 
 const StyledMenu = styled(MenuList)`
   width: 16vw;
   background-color: #1e2f3e;
   border-radius: 8px;
-  padding: 1vw;
+  padding: 0 1vw;
 `;
 
 interface TabPanelProps {
@@ -113,7 +114,7 @@ const Furnitures: FurnitureInfo[] = [
   },
 ];
 
-const FurnitureContextMenu = ({ id }: { id: string }) => {
+const FurnitureContextMenu = ({ id, stageRef }: { id: string, stageRef: RefObject<Konva.Stage | null> }) => {
   const [value, setValue] = useState(0);
   const dispatch = useDispatch();
   const selectedId = useSelector(selectSelectedId);
@@ -144,6 +145,25 @@ const FurnitureContextMenu = ({ id }: { id: string }) => {
         isOpen={JSON.stringify(room?.furniture) !== JSON.stringify(furnitures)}
       />
       <StyledMenu style={{ height: "min-content" }}>
+        <Button
+          fullWidth
+          variant="contained"
+          color="primary"
+          sx={{ mb: 2 }}
+          onClick={() => {
+            if (!stageRef.current) return;
+            const uri = stageRef.current.toDataURL({
+              mimeType: "image/jpeg",
+              quality: 1,
+            });
+            const link = document.createElement("a");
+            link.download = "room.jpg";
+            link.href = uri;
+            link.click();
+          }}
+        >
+          Зберегти фото кімнати
+        </Button>
         <Box sx={{ mb: 2 }}>
           <Typography
             color="white"
