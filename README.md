@@ -1,36 +1,51 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🛋️ RoomCraft — Твій простір, твій дизайн!
 
-## Getting Started
+RoomCraft — це сучасний веб-застосунок, який дозволяє легко створювати дизайн своєї кімнати прямо у браузері. Розставляй меблі, експериментуй із кольорами, плануй простір і отримуй повну свободу для втілення своїх ідей.
 
-First, run the development server:
+---
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## 🚀 Технологічний стек
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- **Next.js** – фреймворк для серверного рендерингу React-додатків
+- **TypeScript** – типізований JavaScript для надійного коду
+- **Redux Toolkit** – зручне управління станом додатка
+- **Material UI** – сучасна бібліотека компонентів інтерфейсу
+- **Sass (SCSS)** – стилізація з потужними можливостями
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 🛠️ Утиліти, що допомогли в розробці
 
-## Learn More
+- 💻 **VS Code** – основне середовище розробки
+- 🎨 **Figma** – дизайн та прототипування інтерфейсу
+- 🌱 **Git / GitHub** – контроль версій та співпраця
+- 📋 **Trello** – планування задач та прогресу
 
-To learn more about Next.js, take a look at the following resources:
+---
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 👨‍💻 Команда розробників
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Клікніть на аватарку, щоб перейти на GitHub профіль учасника.
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+<table>
+  <tr>
+    <td align="center">
+      <a href="https://github.com/m1xture" target="_blank">
+        <img src="https://avatars.githubusercontent.com/u/86604702?v=4" width="100px;" alt=""/>
+        <br /><sub><b>m1xture</b></sub>
+      </a>
+    </td>
+    <td align="center">
+      <a href="https://github.com/0qsenxx" target="_blank">
+        <img src="https://avatars.githubusercontent.com/u/102693358?v=4" width="100px;" alt=""/>
+        <br /><sub><b>0qsenxx</b></sub>
+      </a>
+    </td>
+    <td align="center">
+      <a href="https://github.com/KirillProgrammerTop1gg" target="_blank">
+        <img src="https://avatars.githubusercontent.com/u/122130288?v=4" width="100px;" alt=""/>
+        <br /><sub><b>KirillProgrammerTop1gg</b></sub>
+      </a>
+    </td>
+  </tr>
+</table>
