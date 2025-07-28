@@ -97,7 +97,11 @@ const RoomItem = ({ room }: { room: ReducedRoom }) => {
           secondary={
             typeof room.furniture === "string"
               ? room.furniture
-              : room.furniture.join(", ")
+              : room.furniture
+                  .filter((item, pos, ary) => {
+                    return !pos || item != ary[pos - 1];
+                  })
+                  .join(", ")
           }
         />
       </Box>

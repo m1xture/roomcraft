@@ -3,7 +3,11 @@ import FurnitureContextMenu from "@/components/features/room/FurnitureContextMen
 import RoomCanvas from "@/components/features/room/RoomCanvas/RoomCanvas";
 import Container from "@/components/shared/layout/Container/Container";
 import Header from "@/components/shared/layout/Header/Header";
-import { editH, editW, setInitialFurnitures } from "@/lib/redux/furniture/furnitureSlice";
+import {
+  editH,
+  editW,
+  setInitialFurnitures,
+} from "@/lib/redux/furniture/furnitureSlice";
 import { selectRoomById } from "@/lib/redux/rooms/roomsSlice";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect } from "react";
@@ -44,15 +48,16 @@ export default () => {
     return null;
   }
   return (
-    <RoomSection>
+    <>
       <Header />
-      <Container>
-        <ControlPanel>
-          <FurnitureContextMenu id={id}/>
-          <RoomCanvas id={id}/>
-        </ControlPanel>
-      </Container>
-    </RoomSection>
+      <RoomSection>
+        <Container>
+          <ControlPanel>
+            <FurnitureContextMenu id={id} />
+            <RoomCanvas id={id} />
+          </ControlPanel>
+        </Container>
+      </RoomSection>
+    </>
   );
 };
-
