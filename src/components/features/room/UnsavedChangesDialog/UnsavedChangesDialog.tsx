@@ -20,12 +20,11 @@ const UnsavedChangesDialog = ({
   handleSave,
 }: {
   isOpen: boolean;
-  handleClose: () => void;
   handleReset: () => void;
   handleSave: () => void;
 }) => {
   return (
-    <Slide direction="up" in={isOpen}>
+    <Slide direction="up" in={isOpen} style={{zIndex: 99}}>
       <div className={css.dialogOverlay}>
         <div className={css.dialog}>
           <DialogTitle padding={"0px"} color="primary" fontSize={"1rem"}>

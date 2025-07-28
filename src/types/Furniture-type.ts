@@ -20,9 +20,10 @@ export interface FurnitureInfo {
   id: string;
   title: string;
   description: string;
-  image: string;
-  size: {
-    width: number;
-    height: number;
-  };
+  tag: string;
+  category: string;
+  sizes: [
+    [number, number],
+    [number, number],
+  ]
 }
