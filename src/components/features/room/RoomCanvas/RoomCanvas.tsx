@@ -1,5 +1,5 @@
 "use client";
-import { MouseEvent, useEffect, useState } from "react";
+import { MouseEvent, RefObject, useEffect, useRef, useState } from "react";
 import { Stage, Layer, Rect, Image, Group } from "react-konva";
 import useImage from "use-image";
 import { useDispatch, useSelector } from "react-redux";
@@ -15,6 +15,7 @@ import { ImageConfig } from "konva/lib/shapes/Image";
 import { selectRoomById } from "@/lib/redux/rooms/roomsSlice";
 import { ActiveFurniture } from "@/types/Furniture-type";
 import { KonvaEventObject } from "konva/lib/Node";
+import Konva from "konva";
 
 type Props = {
   image: string;
@@ -27,7 +28,13 @@ const URLImage = ({ image, ...rest }: Props) => {
 
 const GRID_SIZE = 50;
 
-const RoomCanvas = ({ id }: { id: string }) => {
+const RoomCanvas = ({
+  id,
+  stageRef,
+}: {
+  id: string;
+  stageRef: RefObject<Konva.Stage | null>;
+}) => {
   const dispatch = useDispatch();
   const allFurniture = useSelector(selectAllFurniture);
   const selectedId = useSelector(selectSelectedId);
@@ -100,7 +107,17 @@ const RoomCanvas = ({ id }: { id: string }) => {
 
   return (
     <div style={{ margin: "auto" }}>
-      <Stage width={stageWidth + 2} height={stageHeight + 2}>
+      <Stage ref={stageRef} width={stageWidth + 2} height={stageHeight + 2}>
+        <Layer>
+          <Rect
+            x={0}
+            y={0}
+            width={stageWidth + 2}
+            height={stageHeight + 2}
+            fill="#172430"
+            listening={false}
+          />
+        </Layer>
         <Layer onClick={() => dispatch(setSelectedID(""))}>{gridLines}</Layer>
         <Layer>
           {allFurniture.map((furniture) => (
@@ -108,7 +125,7 @@ const RoomCanvas = ({ id }: { id: string }) => {
               key={furniture.id}
               x={furniture.position.x}
               y={furniture.position.y}
-              draggable={!furniture.isLocked}
+              draggable={!(furniture.isLocked || room?.isLocked)}
               onClick={() => dispatch(setSelectedID(furniture.id))}
               onDragEnd={(e) => handleDragEvt(furniture, e)}
               onMouseOver={() => (document.body.style.cursor = "grab")}
@@ -119,7 +136,7 @@ const RoomCanvas = ({ id }: { id: string }) => {
                 height={furniture.angles[furniture.angle][1][1]}
                 image={furniture.angles[furniture.angle][0]}
               />
-              {selectedId === furniture.id && (
+              {selectedId === furniture.id && !room?.isLocked && (
                 <Rect
                   x={0}
                   y={0}
