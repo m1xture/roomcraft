@@ -36,13 +36,23 @@ const roomsPersistConfig = {
   transforms: [compressionTransform],
 };
 
+const furniturePersistConfig = {
+  key: "furniture",
+  storage: storage("furniture"),
+  transforms: [compressionTransform],
+};
+
 const persistedRoomsReducer = persistReducer(roomsPersistConfig, roomsReducer);
+const persistedFurnitureReducer = persistReducer(
+  furniturePersistConfig,
+  furnitureReducer
+);
 
 export const store = configureStore({
   reducer: {
     auth: authReducer,
     rooms: persistedRoomsReducer,
-    furniture: furnitureReducer,
+    furniture: persistedFurnitureReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
