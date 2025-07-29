@@ -3,8 +3,8 @@ import { ReactNode } from "react";
 import { persistor, store } from "@/lib/redux/store";
 import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
+import { Bounce, ToastContainer } from "react-toastify";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { ToastContainer } from "react-toastify";
 
 const Providers = ({
   children,
@@ -42,6 +42,19 @@ const Providers = ({
         <PersistGate persistor={persistor} loading={null}>
           <ToastContainer />
           {children}
+          <ToastContainer
+            position="top-right"
+            autoClose={3000}
+            hideProgressBar={false}
+            newestOnTop={false}
+            closeOnClick={false}
+            rtl
+            pauseOnFocusLoss
+            draggable
+            pauseOnHover
+            theme="colored"
+            transition={Bounce}
+          />
         </PersistGate>
       </Provider>
     </ThemeProvider>

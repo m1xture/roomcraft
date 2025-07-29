@@ -1,4 +1,5 @@
 "use client";
+import BlockedRoomNotify from "@/components/features/room/BlockRoomNotify/BlockedRoom";
 import FurnitureContextMenu from "@/components/features/room/FurnitureContextMenu/FurnitureContextMenu";
 import RoomCanvas from "@/components/features/room/RoomCanvas/RoomCanvas";
 import Container from "@/components/shared/layout/Container/Container";
@@ -9,8 +10,9 @@ import {
   setInitialFurnitures,
 } from "@/lib/redux/furniture/furnitureSlice";
 import { selectRoomById } from "@/lib/redux/rooms/roomsSlice";
+import Konva from "konva";
 import { useParams, useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 
@@ -31,6 +33,7 @@ export default () => {
   const dispatch = useDispatch();
   const id: string = String(useParams()?.id) || "";
   const room = useSelector(selectRoomById(id));
+  const ref = useRef<Konva.Stage>(null);
   useEffect(() => {
     if (!room) {
       router.replace("/rooms");
@@ -53,9 +56,10 @@ export default () => {
       <RoomSection>
         <Container>
           <ControlPanel>
-            <FurnitureContextMenu id={id} />
-            <RoomCanvas id={id} />
+            {!room.isLocked && <FurnitureContextMenu stageRef={ref} id={id} />}
+            <RoomCanvas stageRef={ref} id={id} />
           </ControlPanel>
+          {room.isLocked && <BlockedRoomNotify stageRef={ref} />}
         </Container>
       </RoomSection>
     </>

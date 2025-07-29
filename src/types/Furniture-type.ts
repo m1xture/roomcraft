@@ -18,9 +18,9 @@ export interface ActiveFurniture {
 
 export interface FurnitureInfo {
   id: string;
+  tag: string;
   title: string;
   description: string;
-  tag: string;
   category: string;
   sizes: [
     [number, number],
