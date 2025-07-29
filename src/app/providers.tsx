@@ -40,6 +40,7 @@ const Providers = ({
     <ThemeProvider theme={theme}>
       <Provider store={store}>
         <PersistGate persistor={persistor} loading={null}>
+          <ToastContainer />
           {children}
           <ToastContainer
             position="top-right"

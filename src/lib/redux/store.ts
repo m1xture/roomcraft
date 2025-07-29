@@ -15,6 +15,7 @@ import { furnitureReducer } from "./furniture/furnitureSlice";
 import storage from "redux-persist-indexeddb-storage";
 import { compressSync, decompressSync, strToU8, strFromU8 } from "fflate";
 import { roomsReducer } from "./rooms/roomsSlice";
+import { authApi } from "./auth/authApi";
 
 // import storage from "redux-persist/lib/storage";
 
@@ -53,13 +54,14 @@ export const store = configureStore({
     auth: authReducer,
     rooms: persistedRoomsReducer,
     furniture: persistedFurnitureReducer,
+    [authApi.reducerPath]: authApi.reducer
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: {
         ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
       },
-    }),
+    }).concat(authApi.middleware),
 });
 
 export const persistor = persistStore(store);

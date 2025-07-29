@@ -4,7 +4,6 @@ import {
   Dialog,
   DialogTitle,
   DialogContent,
-  DialogContentText,
   DialogActions,
   TextField,
   Button,
@@ -20,7 +19,7 @@ type ErrorProps =
       error: true;
       helperText: string;
     }
-  | {};
+  | object;
 
 const roomNameSchema = z
   .string({ error: "Недійсна назва кімнати" })
