@@ -5,6 +5,7 @@ import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
 import { Bounce, ToastContainer } from "react-toastify";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
+import UpdateRoom from "@/components/features/UpdateRoom/UpdateRoom";
 
 const Providers = ({
   children,
@@ -56,6 +57,7 @@ const Providers = ({
             transition={Bounce}
           />
         </PersistGate>
+        <UpdateRoom />
       </Provider>
     </ThemeProvider>
   );
