@@ -16,6 +16,7 @@ import storage from "redux-persist-indexeddb-storage";
 import { compressSync, decompressSync, strToU8, strFromU8 } from "fflate";
 import { roomsReducer } from "./rooms/roomsSlice";
 import { authApi } from "./auth/authApi";
+import { roomsApi } from "./rooms/roomsApi";
 
 // import storage from "redux-persist/lib/storage";
 
@@ -43,7 +44,14 @@ const furniturePersistConfig = {
   transforms: [compressionTransform],
 };
 
+const authPersistConfig = {
+  key: "auth",
+  storage: storage("auth"),
+  transforms: [compressionTransform],
+};
+
 const persistedRoomsReducer = persistReducer(roomsPersistConfig, roomsReducer);
+const persistedAuthReducer = persistReducer(authPersistConfig, authReducer);
 const persistedFurnitureReducer = persistReducer(
   furniturePersistConfig,
   furnitureReducer
@@ -51,17 +59,20 @@ const persistedFurnitureReducer = persistReducer(
 
 export const store = configureStore({
   reducer: {
-    auth: authReducer,
+    auth: persistedAuthReducer,
     rooms: persistedRoomsReducer,
     furniture: persistedFurnitureReducer,
-    [authApi.reducerPath]: authApi.reducer
+    [authApi.reducerPath]: authApi.reducer,
+    [roomsApi.reducerPath]: roomsApi.reducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: {
         ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
       },
-    }).concat(authApi.middleware),
+    })
+      .concat(authApi.middleware)
+      .concat(roomsApi.middleware),
 });
 
 export const persistor = persistStore(store);

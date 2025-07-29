@@ -1,12 +1,18 @@
-import { deleteRoom, toggleRoomLocked } from "@/lib/redux/rooms/roomsSlice";
+import {
+  deleteRoom,
+  toggleRoomLocked,
+  toggleRoomPublic,
+} from "@/lib/redux/rooms/roomsSlice";
 import { AppDispatch } from "@/lib/redux/store";
 import { ReducedRoom } from "@/types/Room-type";
 import { ListItem, ListItemText, IconButton, Box } from "@mui/material";
 import Link from "next/link";
 import { MouseEvent, useCallback } from "react";
 import { FaTrash, FaLock, FaLockOpen } from "react-icons/fa6";
-import { useDispatch } from "react-redux";
+import { FaUserShield, FaUserCheck } from "react-icons/fa";
+import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
+import { selectTokens } from "@/lib/redux/auth/authSlice";
 
 const StyledListItemText = styled(ListItemText)`
   max-width: 90%;
@@ -37,6 +43,7 @@ const StyledListItemText = styled(ListItemText)`
 `;
 
 const RoomItem = ({ room }: { room: ReducedRoom }) => {
+  const tokens = useSelector(selectTokens);
   const dispatch: AppDispatch = useDispatch();
   const handleDeleteRoom = useCallback(
     (e: MouseEvent) => {
@@ -52,6 +59,13 @@ const RoomItem = ({ room }: { room: ReducedRoom }) => {
     },
     [dispatch, room]
   );
+  const handleTogglePublicRoom = useCallback(
+    (e: MouseEvent) => {
+      e.stopPropagation();
+      dispatch(toggleRoomPublic(room.id));
+    },
+    [dispatch, room]
+  );
   return (
     <ListItem
       sx={{
@@ -62,6 +76,17 @@ const RoomItem = ({ room }: { room: ReducedRoom }) => {
       }}
       secondaryAction={
         <>
+          {tokens.accessToken && (
+            <IconButton
+              edge="end"
+              aria-label="lock"
+              onClick={handleTogglePublicRoom}
+              color="primary"
+              sx={{ marginRight: "0.03em", opacity: 0.9 }}
+            >
+              {room.isPublic ? <FaUserCheck /> : <FaUserShield />}
+            </IconButton>
+          )}
           <IconButton
             edge="end"
             aria-label="lock"

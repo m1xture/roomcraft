@@ -8,7 +8,11 @@ import {
   TextField,
   Button,
 } from "@mui/material";
-import { createRoom, selectAllRooms } from "@/lib/redux/rooms/roomsSlice";
+import {
+  addRoomFlow,
+  createRoom,
+  selectAllRooms,
+} from "@/lib/redux/rooms/roomsSlice";
 import { FormEvent, useMemo, useState } from "react";
 import { AppDispatch } from "@/lib/redux/store";
 import styled from "styled-components";
@@ -69,7 +73,7 @@ const CreateRoomModal = ({
         return;
       }
       setError({});
-      dispatch(createRoom(newRoomName));
+      dispatch(addRoomFlow({ name: newRoomName }));
       closeCb();
     }
   };
