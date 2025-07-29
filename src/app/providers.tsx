@@ -3,7 +3,8 @@ import { ReactNode } from "react";
 import { persistor, store } from "@/lib/redux/store";
 import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
-import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { ToastContainer } from "react-toastify";
 
 const Providers = ({
   children,
@@ -13,24 +14,24 @@ const Providers = ({
   const theme = createTheme({
     palette: {
       primary: {
-        main: '#fafbfe',
+        main: "#fafbfe",
       },
       secondary: {
-        main: '#12a4d5',
-        contrastText: '#fafbfe'
+        main: "#12a4d5",
+        contrastText: "#fafbfe",
       },
       background: {
-        default: '#172430',
+        default: "#172430",
       },
     },
     typography: {
-      fontFamily: 'var(--font-roboto-mono)',
-      h1: { fontFamily: 'var(--font-jetbrains-mono)' },
-      h2: { fontFamily: 'var(--font-jetbrains-mono)' },
-      h3: { fontFamily: 'var(--font-jetbrains-mono)' },
-      h4: { fontFamily: 'var(--font-jetbrains-mono)' },
-      h5: { fontFamily: 'var(--font-jetbrains-mono)' },
-      h6: { fontFamily: 'var(--font-jetbrains-mono)' },
+      fontFamily: "var(--font-roboto-mono)",
+      h1: { fontFamily: "var(--font-jetbrains-mono)" },
+      h2: { fontFamily: "var(--font-jetbrains-mono)" },
+      h3: { fontFamily: "var(--font-jetbrains-mono)" },
+      h4: { fontFamily: "var(--font-jetbrains-mono)" },
+      h5: { fontFamily: "var(--font-jetbrains-mono)" },
+      h6: { fontFamily: "var(--font-jetbrains-mono)" },
       fontSize: 14,
     },
     spacing: 8,
@@ -39,6 +40,7 @@ const Providers = ({
     <ThemeProvider theme={theme}>
       <Provider store={store}>
         <PersistGate persistor={persistor} loading={null}>
+          <ToastContainer />
           {children}
         </PersistGate>
       </Provider>
