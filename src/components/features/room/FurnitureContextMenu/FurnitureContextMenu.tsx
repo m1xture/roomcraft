@@ -23,7 +23,7 @@ import {
 } from "@mui/material";
 import { RefObject, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import furnituresData from '../../../../lib/constants/furniture.json';
+import furnituresData from "../../../../lib/constants/furniture.json";
 import {
   addNewFurniture,
   delFurniture,
@@ -90,7 +90,13 @@ const a11yProps = (index: number) => ({
 
 const Furnitures: FurnitureInfo[] = furnituresData as FurnitureInfo[];
 
-const FurnitureContextMenu = ({ id, stageRef }: { id: string, stageRef: RefObject<Konva.Stage | null> }) => {
+const FurnitureContextMenu = ({
+  id,
+  stageRef,
+}: {
+  id: string;
+  stageRef: RefObject<Konva.Stage | null>;
+}) => {
   const [value, setValue] = useState(0);
   const dispatch = useDispatch();
   const selectedId = useSelector(selectSelectedId);
@@ -193,7 +199,19 @@ const FurnitureContextMenu = ({ id, stageRef }: { id: string, stageRef: RefObjec
         </Box>
 
         <CustomTabPanel value={value} index={0}>
-          <Stack spacing={1}>
+          <Stack
+            spacing={1}
+            component={"ul"}
+            maxHeight={"40vh"}
+            sx={{
+              "overflowY": "scroll",
+              "overflowX": "hidden",
+              "::-webkit-scrollbar-track": {
+                background: "transparent",
+                borderRadius: "4px",
+              },
+            }}
+          >
             {Furnitures.map((f: FurnitureInfo) => (
               <FurnitureCard
                 key={f.id}
