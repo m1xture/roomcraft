@@ -19,7 +19,33 @@ export const roomsApi = createApi({
       }),
       invalidatesTags: [{ type: "Rooms", id: "LIST" }],
     }),
+    getRoom: builder.query<{room: Room}, string>({
+      query: (id) => ({
+        url: `rooms/${id}`,
+        method: "GET",
+      }),
+    }),
+    updateRoom: builder.mutation<Room, { id: string; updatedRoom: Partial<Room> }>({
+      query: ({ id, updatedRoom }) => ({
+        url: `rooms/${id}`,
+        method: "PUT",
+        body: updatedRoom,
+      }),
+      invalidatesTags: [{ type: "Rooms", id: "LIST" }],
+    }),
+    deleteRoom: builder.mutation<void, string>({
+      query: (id) => ({
+        url: `rooms/${id}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: [{ type: "Rooms", id: "LIST" }],
+    }),
   }),
 });
 
-export const { useAddRoomMutation } = roomsApi;
+export const {
+  useAddRoomMutation,
+  useGetRoomQuery,
+  useUpdateRoomMutation,
+  useDeleteRoomMutation,
+} = roomsApi;

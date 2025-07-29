@@ -13,6 +13,7 @@ import { FaUserShield, FaUserCheck } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 import { selectTokens } from "@/lib/redux/auth/authSlice";
+import { useDeleteRoomMutation } from "@/lib/redux/rooms/roomsApi";
 
 const StyledListItemText = styled(ListItemText)`
   max-width: 90%;
@@ -43,11 +44,13 @@ const StyledListItemText = styled(ListItemText)`
 `;
 
 const RoomItem = ({ room }: { room: ReducedRoom }) => {
+  const [deleteRoomFetch] = useDeleteRoomMutation();
   const tokens = useSelector(selectTokens);
   const dispatch: AppDispatch = useDispatch();
   const handleDeleteRoom = useCallback(
     (e: MouseEvent) => {
       e.stopPropagation();
+      deleteRoomFetch(room.id)
       dispatch(deleteRoom(room.id));
     },
     [dispatch, room]

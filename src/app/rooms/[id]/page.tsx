@@ -9,7 +9,9 @@ import {
   editW,
   setInitialFurnitures,
 } from "@/lib/redux/furniture/furnitureSlice";
-import { selectRoomById } from "@/lib/redux/rooms/roomsSlice";
+import { useGetRoomQuery } from "@/lib/redux/rooms/roomsApi";
+import { createRoom, selectRoomById } from "@/lib/redux/rooms/roomsSlice";
+import { nanoid } from "@reduxjs/toolkit";
 import Konva from "konva";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useRef } from "react";
@@ -28,28 +30,32 @@ const ControlPanel = styled.div`
   gap: 5vh;
 `;
 
-export default () => {
+const RoomPage = () => {
   const router = useRouter();
   const dispatch = useDispatch();
-  const id: string = String(useParams()?.id) || "";
-  const room = useSelector(selectRoomById(id));
+  const id = String(useParams()?.id || "");
+  const { data, isLoading, isSuccess } = useGetRoomQuery(id);
+  const roomFromStore = useSelector(selectRoomById(id));
+  const room = roomFromStore || data?.room;
   const ref = useRef<Konva.Stage>(null);
   useEffect(() => {
-    if (!room) {
-      router.replace("/rooms");
-      return;
+    if (!roomFromStore) {
+      if (!isLoading && !isSuccess) {
+        router.replace("/rooms");
+        return;
+      }
+      if (room) {
+        dispatch(createRoom({
+          ...room,
+          _id: nanoid(),
+        }))
+        dispatch(setInitialFurnitures(room.furniture || []));
+        dispatch(editW(room.width || 6));
+        dispatch(editH(room.height || 6));
+      }
     }
-    const furniture = room.furniture || [];
-    const w = room.width || 6;
-    const h = room.height || 6;
-    dispatch(setInitialFurnitures(furniture));
-    dispatch(editW(w));
-    dispatch(editH(h));
-  }, [dispatch, room, router]);
-
-  if (!room) {
-    return null;
-  }
+  }, [roomFromStore, room, isLoading, isSuccess, dispatch, router]);
+  if (!room) return null;
   return (
     <>
       <Header />
@@ -65,3 +71,5 @@ export default () => {
     </>
   );
 };
+
+export default RoomPage;
