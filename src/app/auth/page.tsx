@@ -13,6 +13,11 @@ import { toast, Bounce } from "react-toastify";
 import { useRef, useEffect } from "react";
 import { Id } from "react-toastify";
 
+interface IError {
+  message: string;
+  errors: [];
+}
+
 const FormSchema = z.object({
   username: z
     .string()
@@ -53,10 +58,31 @@ const AuthPage = () => {
     Partial<Record<keyof FormFields, string>>
   >({});
   const toastId = useRef<Id>(null);
-  const [registr, { isLoading: isLoadingRegistr }] = useSignupMutation();
+  const [registr, { isLoading: isLoadingRegistr, error: errorSignup }] =
+    useSignupMutation();
   const [signin, { isLoading: isLoadingSignIn }] = useSigninMutation();
   const dispatch = useDispatch();
   const router = useRouter();
+
+  useEffect(() => {
+    if (errorSignup) {
+      if ("data" in errorSignup) {
+        const message =
+          (errorSignup.data as IError)?.message || "Registration failed";
+        toast.error(message, {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: false,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "dark",
+          transition: Bounce,
+        });
+      }
+    }
+  }, [errorSignup]);
 
   useEffect(() => {
     if (isLoadingRegistr || isLoadingSignIn) {
@@ -76,7 +102,7 @@ const AuthPage = () => {
       if (!toastId.current) return;
       toast.dismiss(toastId.current);
     }
-  }, [isLoadingRegistr || isLoadingSignIn]);
+  }, [isLoadingRegistr, isLoadingSignIn]);
 
   const handleAuth = async (evt: FormEvent<HTMLFormElement>) => {
     evt.preventDefault();
@@ -87,7 +113,6 @@ const AuthPage = () => {
       username: (formData.get("username") as string) || "",
       password: (formData.get("password") as string) || "",
     };
-    console.log(data);
 
     const result = FormSchema.safeParse(data);
     console.log(result);
@@ -125,17 +150,20 @@ const AuthPage = () => {
       } catch (err) {
         console.log(err);
         if (!isRegistration)
-          toast.error("Йой, знову забув пароль? Спробуй згадати", {
-            position: "top-right",
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeOnClick: false,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "dark",
-            transition: Bounce,
-          });
+          toast.error(
+            "Йой, знову забув пароль? Чи на цей раз логін? Спробуй згадати",
+            {
+              position: "top-right",
+              autoClose: 5000,
+              hideProgressBar: false,
+              closeOnClick: false,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "dark",
+              transition: Bounce,
+            }
+          );
       }
     }
 
