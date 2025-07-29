@@ -11,6 +11,7 @@ import {
 } from "@/lib/redux/furniture/furnitureSlice";
 import { useGetRoomQuery } from "@/lib/redux/rooms/roomsApi";
 import { createRoom, selectRoomById } from "@/lib/redux/rooms/roomsSlice";
+import { Room } from "@/types/Room-type";
 import { nanoid } from "@reduxjs/toolkit";
 import Konva from "konva";
 import { useParams, useRouter } from "next/navigation";
@@ -36,7 +37,7 @@ const RoomPage = () => {
   const id = String(useParams()?.id || "");
   const { data, isLoading, isSuccess } = useGetRoomQuery(id);
   const roomFromStore = useSelector(selectRoomById(id));
-  const room = roomFromStore || data?.room;
+  const room = roomFromStore || (data?.room as Room);
   const ref = useRef<Konva.Stage>(null);
   useEffect(() => {
     if (!roomFromStore) {
@@ -44,15 +45,11 @@ const RoomPage = () => {
         router.replace("/rooms");
         return;
       }
-      if (room) {
-        dispatch(createRoom({
-          ...room,
-          _id: nanoid(),
-        }))
-        dispatch(setInitialFurnitures(room.furniture || []));
-        dispatch(editW(room.width || 6));
-        dispatch(editH(room.height || 6));
-      }
+    }
+    if (isSuccess || roomFromStore) {
+      dispatch(setInitialFurnitures(room.furniture || []));
+      dispatch(editW(room.width || 6));
+      dispatch(editH(room.height || 6));
     }
   }, [roomFromStore, room, isLoading, isSuccess, dispatch, router]);
   if (!room) return null;
@@ -62,10 +59,10 @@ const RoomPage = () => {
       <RoomSection>
         <Container>
           <ControlPanel>
-            {!room.isLocked && <FurnitureContextMenu stageRef={ref} id={id} />}
+            {(!room.isLocked && roomFromStore) && <FurnitureContextMenu stageRef={ref} id={id} />}
             <RoomCanvas stageRef={ref} id={id} />
           </ControlPanel>
-          {room.isLocked && <BlockedRoomNotify stageRef={ref} />}
+          {(room.isLocked || !roomFromStore) && <BlockedRoomNotify stageRef={ref} />}
         </Container>
       </RoomSection>
     </>
